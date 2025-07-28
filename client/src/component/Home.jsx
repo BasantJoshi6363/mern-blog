@@ -6,7 +6,6 @@ import axios from "axios";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const { logout } = useContext(AuthContext);
 
   const getPost = useCallback(async () => {
     try {
