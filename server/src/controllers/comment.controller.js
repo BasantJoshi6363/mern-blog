@@ -1,9 +1,12 @@
 // controllers/comment.controller.js
 import { Comment } from "../models/comment.model.js";
+import Post from "../models/post.model.js";
 
 export const createComment = async (req, res) => {
     try {
+        console.log(req.params)
         const { content } = req.body;
+        console.log(content)
 
         if (!content) {
             return res.status(400).json({
@@ -14,10 +17,16 @@ export const createComment = async (req, res) => {
 
         const comment = await Comment.create({
             content,
-            user: req.user._id, 
-            post : req.params.id
-            
+            user: req.user._id,
+            post: req.params.id
+
         });
+
+        await Post.findByIdAndUpdate(req.params.id, {
+            $push: {
+                comment: comment._id
+            }
+        }, { new: true })
 
         return res.status(201).json({
             success: true,
