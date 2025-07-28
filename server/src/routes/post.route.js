@@ -1,11 +1,12 @@
-import express from "express";
-import upload from "../utils/upload.js";
-import authenticate from "../utils/authenticate.js";
-import { createPost, getAllPost, getSinglePost } from "../controller/post.controller.js";
+import express from "express"
+import { createPost, getPost, getsinglePost } from "../controllers/post.controller.js";
+import upload from "../utils/multer.js";
 const postRouter = express.Router();
+import { isAuthenticated } from "../isAuth.js";
 
-postRouter.post("/create", upload.single("file"), authenticate, createPost);
-postRouter.get("/", getAllPost);
-postRouter.get("/:id", getSinglePost);
+postRouter.post("/v1/create", isAuthenticated, upload.single("file"), createPost)
+postRouter.get("/posts", getPost)
+postRouter.get("/post/:id", getsinglePost)
+
 
 export default postRouter;
