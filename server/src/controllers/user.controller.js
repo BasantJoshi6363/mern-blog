@@ -133,3 +133,49 @@ export const validateToken = async (req, res) => {
         });
     }
 }
+
+
+export const followUser = async(req,res)=>{
+    try {
+        const { userId } = req.body;
+        const currentUserId = req.user.id; // Assuming you have middleware to set req.user
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required.",
+            });
+        }
+
+        const userToFollow = await User.findById(userId);
+        if (!userToFollow) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
+        // Add the user to the following list
+        await User.findByIdAndUpdate(currentUserId, {
+            $addToSet: { following: userId }
+        });
+
+        // Add the current user to the followers list of the followed user
+        await User.findByIdAndUpdate(userId, {
+            $addToSet: { followers: currentUserId }
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "User followed successfully.",
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while following user.",
+        });
+    }
+
+}
+

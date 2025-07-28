@@ -75,6 +75,7 @@ export const getsinglePost = async (req, res) => {
     try {
         const { id } = req.params;
         const result = await Post.findById(id).populate("user").populate("comment").exec();
+        console.log(result)
         if (!result) {
             return res.status(404).json({
                 success: false,

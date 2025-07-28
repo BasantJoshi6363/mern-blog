@@ -18,6 +18,21 @@ const userSchema = new mongoose.Schema({
   profile: {
     type: String,
   },
+  bio: {
+    type: String,
+    default: "This is my bio",
+  },
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  }]
+
+},{
+  timestamps: true,
 });
 
 export const User = new mongoose.model("User", userSchema);
