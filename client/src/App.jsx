@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useContext, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
+import UserPage from './component/UserPage';
 
 const Loader = lazy(() => import('./component/Loader'));
 const ProtectedRoute = lazy(() => import('./component/ProtectedRoute'));
@@ -31,6 +32,7 @@ const App = () => {
           <Route path='/blog' index element={<Blog />} />
           <Route path='/' element={<Home />}></Route>
           <Route path='/:id' element={<SinglePage />}></Route>
+          <Route path='/user/:id' element={<UserPage />}></Route>
           <Route path='/login' element={<PublicRoute><Login /></PublicRoute>}></Route>
           <Route path='/register' element={<PublicRoute><Register /></PublicRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>

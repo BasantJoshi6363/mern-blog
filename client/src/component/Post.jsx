@@ -50,14 +50,14 @@ const Post = ({ val }) => {
 
           <div className="flex gap-5 items-center">
             <ul className='flex gap-3 items-center mt-3'>
-              <li className='flex gap-1 items-center'>
+              <Link className='flex gap-1 items-center'>
                 <CiHeart size={25} />
                 <p>{val.like?.length || 1}</p>
-              </li>
-              <li className='flex gap-1 items-center'>
+              </Link>
+              <Link to={`/${val.id}`} className='flex gap-1 items-center'>
                 <VscComment size={20} />
                 <p>{val.comment?.length || 0}</p>
-              </li>
+              </Link>
             </ul>
             <Link to={`/${val.id}`}>
               <Button val={"Read More"} />
