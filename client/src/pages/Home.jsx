@@ -13,7 +13,7 @@ const Home = () => {
     { title: "Health", imageUrl: "https://images.pexels.com/photos/3076509/pexels-photo-3076509.jpeg", category: "health" },
     { title: "Sports", imageUrl: "https://images.pexels.com/photos/248547/pexels-photo-248547.jpeg", category: "sports" }
   ]
-  if (loading) return <Loader />
+  // if (loading) return <Loader />
   return (
     <div className="">
       {isAuthenticated ? (

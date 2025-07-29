@@ -12,7 +12,7 @@ export const PostContext = createContext();
 export const PostProvider = ({ children }) => {
     const { setLoading } = useContext(AuthContext);
     const [post, setPost] = useState([])
-    const {singlePost,setSinglePost} = useState(null);
+    const { singlePost, setSinglePost } = useState(null);
     const createPost = useCallback(async (postInfo) => {
         setLoading(true);
         const formdata = new FormData();
@@ -62,7 +62,7 @@ export const PostProvider = ({ children }) => {
     const getSinglePost = useCallback(async (id) => {
         setLoading(true);
         try {
-           
+
             const response = await axios.get(`http://localhost:5000/api/post/${id}`);
             console.log(response.data.result);
             setSinglePost(response.data.result);
@@ -77,11 +77,33 @@ export const PostProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
+
+    const createComment = useCallback(async (postId, comment) => {
+        setLoading(true);
+
+        try {
+            const response = await axios.post(`http://localhost:5000/api/comment/${postId}`, { content:comment }, {
+                headers: {
+                    Authorization: localStorage.getItem("token")
+                }
+            });
+            if (response.data.success) {
+                toast.success("Comment added successfully");
+                window.location.reload();
+            } else {
+                toast.error("Failed to add comment");
+            }
+        } catch (error) {
+            toast.error("Failed to add comment");
+        }
+        setLoading(false);
+    }, []);
+
     useEffect(() => {
         getPosts();
     }, [])
     return (
-        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost,singlePost }}>
+        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment }}>
             {children}
         </PostContext.Provider>
     )
