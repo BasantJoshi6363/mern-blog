@@ -6,7 +6,6 @@ import { create } from "domain"
 export const createPost = async (req, res) => {
     try {
         const { title, body, category } = req.body
-        console.log(req.user._id)
 
 
         const result = await cloudinary.v2.uploader.upload(req.file.path)
@@ -42,22 +41,14 @@ export const createPost = async (req, res) => {
 
 export const getPost = async (req, res) => {
     try {
+        const result = await Post.find().populate("user").populate({
+            path: "comment",
+            populate: {
+                path: "user",
+                select: "_id username email"
+            }
 
-        // const result = await Post.find().populate({
-        //     path: "comment",
-        //     populate: {
-        //         path: "user",
-        //         select: "username email"
-        //     }
-        // }).populate({
-        //     path: "like",
-        //     populate: {
-        //         path: "user",
-        //         select: "username email"
-        //     }
-        // }).lean().exec();
-
-        const result = await Post.find().populate("user").populate("comment").sort({ createdAt: -1 }).exec();
+        }).sort({ createdAt: -1 }).exec();
         return res.status(201).json({
             success: true,
             message: "Post fetched successfully",
@@ -74,8 +65,14 @@ export const getPost = async (req, res) => {
 export const getsinglePost = async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await Post.findById(id).populate("user").populate("comment").exec();
-        console.log(result)
+        const result = await Post.findById(id).populate("user").populate({
+            path: "comment",
+            populate: {
+                path: "user",
+                select: "_id username email"
+            }
+
+        }).exec();
         if (!result) {
             return res.status(404).json({
                 success: false,

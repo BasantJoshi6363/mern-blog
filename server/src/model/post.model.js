@@ -25,14 +25,14 @@ const postSchema = new mongoose.Schema(
     },
     comment: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Comment"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
       }
     ],
-    like:[
+    like: [
       {
-         type : mongoose.Schema.Types.ObjectId,
-        ref : "Comment"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Like"
       }
     ]
   },
