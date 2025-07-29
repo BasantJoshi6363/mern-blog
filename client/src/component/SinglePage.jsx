@@ -16,6 +16,7 @@ const SinglePost = () => {
     const [loading, setLoading] = useState(true);
     const [comment, setComment] = useState("");
     const { createComment } = useContext(PostContext);
+    console.log(post)
 
 
     const fetchSinglePost = async () => {
@@ -102,16 +103,31 @@ const SinglePost = () => {
                     <input className='w-1/3 px-2 py-2 border-none outline-none bg-zinc-700' type="text" value={comment} onChange={(e) => { setComment(e.target.value) }} placeholder='write your comment: ' />
                     <Button val={"Send Comment"} />
                 </form>
-                <h3 className='lowercase opacity-75'>Comments</h3>
+                <h3 className="lowercase opacity-75">Comments</h3>
 
-                {post.comment.map((val, i) => {
-                    return <div>
-                       {console.log(val)}
+                {post.comment.length === 0 ? (
+                    <div>
+                        <h6>No Comment Available.</h6>
                     </div>
-                })}
+                ) : (
+                    <div className="mt-3">
+                        {post.comment.map((com) => (
+                            <div key={com._id} className="mt-3 flex gap-2 items-center ">
+                                <div className="flex items-center gap-2">
+                                    <Link to={`/user/${com.user._id}`}>
+                                        <ProfileShape val={com.user.username} />
+                                    </Link>
+                                    <p className='text-[11px] opacity-70'>{com.user.username}:</p>
+                                    <p className='text-[11px]'>{com.content}</p>
+                                </div>
+            
+                                <p className='text-[11px] opacity-70'>{moment(com.createdAt).fromNow()}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
-            </div>
-            {/* <div className="max-w-3xl mx-auto bg-white/10 p-6 rounded shadow">
+                {/* <div className="max-w-3xl mx-auto bg-white/10 p-6 rounded shadow">
                 <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
                 <img src={post.imageUrl} alt={post.title} className="w-full h-80 object-cover rounded mb-4" />
                 <p className="mb-2 text-sm text-gray-300">Posted {moment(post.createdAt).fromNow()}</p>
@@ -119,6 +135,7 @@ const SinglePost = () => {
                 <div className="text-gray-400 italic">Category: {post.category}</div>
                 <div className="text-gray-400 mt-2">Posted by: {post.user.username}</div>
             </div> */}
+            </div>
         </div>
     );
 };
