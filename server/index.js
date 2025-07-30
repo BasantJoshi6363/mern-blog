@@ -17,7 +17,7 @@ app.use("/api", userRouter);
 async function connect() {
   try {
     await mongoose.connect(
-      "mongodb://127.0.0.1:27017/blog" );
+      "mongodb://127.0.0.1:27017/blog");
     console.log("database connectionsuccesful!!");
   } catch (error) {
     console.log(error);
