@@ -9,4 +9,5 @@ postRouter.get("/posts", getPost)
 postRouter.get("/post/:id", getsinglePost)
 
 
+
 export default postRouter;

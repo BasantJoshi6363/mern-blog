@@ -1,6 +1,7 @@
 import { User } from "../models/users.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
+import Post from "../models/post.model.js";
 
 // Create User
 export const createUser = async (req, res) => {
@@ -135,7 +136,7 @@ export const validateToken = async (req, res) => {
 }
 
 
-export const followUser = async(req,res)=>{
+export const followUser = async (req, res) => {
     try {
         const { userId } = req.body;
         const currentUserId = req.user.id; // Assuming you have middleware to set req.user
@@ -177,5 +178,33 @@ export const followUser = async(req,res)=>{
         });
     }
 
+}
+
+export const userInfoWithPost = async (req, res) => {
+    try {
+        const { id } = req.params
+
+
+        const result = await Post.find({ user: id }).populate("user").populate({
+            path: "comment",
+            populate: {
+                path: "user",
+                select: "_id username email"
+            }
+        }).sort({
+            createdAt: -1
+        }).exec();
+
+        return res.status(200).json({
+            success: true,
+            message: "user with post fetch successful",
+            result
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
 }
 

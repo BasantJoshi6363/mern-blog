@@ -42,11 +42,11 @@ export const createPost = async (req, res) => {
 export const getPost = async (req, res) => {
     try {
         const result = await Post.find().populate("user").populate({
-            path: "comment",
-            populate: {
-                path: "user",
-                select: "_id username email"
-            }
+                path: "comment",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
 
         }).sort({ createdAt: -1 }).exec();
         return res.status(201).json({
