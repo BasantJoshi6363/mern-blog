@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import moment from 'moment';
@@ -9,6 +9,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaWhatsapp } from "reac
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import Button from './Button';
 import { PostContext } from '../context/PostContext';
+import { AuthContext } from '../context/AuthContext';
 
 const SinglePost = () => {
     const { id } = useParams();
@@ -16,6 +17,7 @@ const SinglePost = () => {
     const [loading, setLoading] = useState(true);
     const [comment, setComment] = useState("");
     const { createComment } = useContext(PostContext);
+    const { isAuthenticated } = useContext(AuthContext);
     console.log(post)
 
 
@@ -42,7 +44,11 @@ const SinglePost = () => {
         e.preventDefault();
         if (!comment) {
             toast.error("Comment cannot be empty");
-            return;
+
+        }
+        if (!isAuthenticated) {
+            toast.error("You must be logged in to comment");
+            return <Navigate to={"/login"} />;
         }
         createComment(post._id, comment);
         setComment("");
@@ -90,51 +96,45 @@ const SinglePost = () => {
                 <PiDotsThreeVerticalBold className='cursor-pointer hover:opacity-85' />
             </div>
             <div className="lower">
-
-                <h1 className='mt-5'>{post.title}</h1>
-                <p className='uppercase opacity-60'>Published  {moment(post.createdAt).format('YYYY MMM DD HH.mm')}</p>
-                <div className="h-[500px] w-full mt-3">
+                <h1 className='mt-10 text-4xl'>{post.title}</h1>
+                <p className='uppercase opacity-60 mt-2'>Published  {moment(post.createdAt).format('YYYY MMM DD HH.mm')}</p>
+                <div className="h-[500px] w-full mt-5">
                     <img src={post.imageUrl} className='size-full object-cover' alt="" />
                 </div>
 
                 <p className='mt-5'>{post.body}</p>
 
                 <form onSubmit={submitHandler} className='flex items-center gap-5 mt-5'>
-                    <input className='w-1/3 px-2 py-2 border-none outline-none bg-zinc-700' type="text" value={comment} onChange={(e) => { setComment(e.target.value) }} placeholder='write your comment: ' />
+                    <input className='w-1/3 px-3 py-3 border-none outline-none bg-zinc-700' type="text" value={comment} onChange={(e) => { setComment(e.target.value) }} placeholder='write your comment: ' />
                     <Button val={"Send Comment"} />
                 </form>
-                <h3 className="lowercase opacity-75">Comments</h3>
 
                 {post.comment.length === 0 ? (
                     <div>
                         <h6>No Comment Available.</h6>
                     </div>
                 ) : (
-                    <div className="mt-3">
+                    <div className="mt-10">
                         {post.comment.map((com) => (
-                            <div key={com._id} className="mt-3 flex gap-2 items-center ">
-                                <div className="flex items-center gap-2">
-                                    <Link to={`/user/${com.user._id}`}>
-                                        <ProfileShape val={com.user.username} />
-                                    </Link>
-                                    <p className='text-[11px] opacity-70'>{com.user.username}:</p>
-                                    <p className='text-[11px]'>{com.content}</p>
+                            <div key={com._id} className="">
+                                <div className="flex gap-2 items-center">
+                                    <div className="">
+                                        <Link to={`/user/${com.user._id}`}>
+                                            <ProfileShape val={com.user.username} />
+                                        </Link>
+                                    </div>
+                                    <div className="w-[369px] bg-zinc-700  p-2  rounded-md">
+                                        <p className='text-[11px] opacity-70'>{com.user.username}</p>
+                                        <p className='text-[15px]'>{com.content}</p>
+                                    </div>
                                 </div>
-            
-                                <p className='text-[11px] opacity-70'>{moment(com.createdAt).fromNow()}</p>
+                                <p className='text-[11px] opacity-70 ml-12 mt-2'>{moment(com.createdAt).from()}</p>
+
+                                <br />
                             </div>
                         ))}
                     </div>
                 )}
-
-                {/* <div className="max-w-3xl mx-auto bg-white/10 p-6 rounded shadow">
-                <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-                <img src={post.imageUrl} alt={post.title} className="w-full h-80 object-cover rounded mb-4" />
-                <p className="mb-2 text-sm text-gray-300">Posted {moment(post.createdAt).fromNow()}</p>
-                <p className="mb-4 text-gray-100">{post.body}</p>
-                <div className="text-gray-400 italic">Category: {post.category}</div>
-                <div className="text-gray-400 mt-2">Posted by: {post.user.username}</div>
-            </div> */}
             </div>
         </div>
     );

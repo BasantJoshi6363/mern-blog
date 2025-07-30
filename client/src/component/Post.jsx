@@ -30,8 +30,8 @@ const Post = ({ val }) => {
             </h6>
           </div>
           <div className="text-gray-400 text-xs text-right ml-2">
-            <span>
-              {moment(val.createdAt).fromNow()}
+            <span className='flex w-[100px]'>
+              {moment(val.create).fromNow()}
             </span>
           </div>
         </div>
