@@ -59,8 +59,9 @@ const Blog = () => {
                 user: {
                   username: val.user.username,
                 },
+                userid: val.user._id,
                 comment: val.comment,
-                like : val.like
+                like: val.like
               }}
             />
           ))}

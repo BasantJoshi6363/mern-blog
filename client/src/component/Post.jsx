@@ -38,7 +38,7 @@ const Post = ({ val }) => {
 
         {/* User Profile */}
         <div className="profile flex gap-3 items-center mt-2">
-          <ProfileShape val={val.user.username} />
+          <Link to={`/user/${val.userid}`}><ProfileShape val={val.user.username} /></Link>
           <p className='opacity-65 text-[10px]'>{val.user.username} ⭐</p>
         </div>
 
