@@ -6,6 +6,7 @@ import userRouter from "./src/routes/user.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors"
+import likeRouter from "./src/routes/like.route.js";
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(cors());
 app.use("/api", postRouter);
 app.use("/api", commentRouter);
 app.use("/api", userRouter);
+app.use("/api", likeRouter);
 
 async function connect() {
   try {
