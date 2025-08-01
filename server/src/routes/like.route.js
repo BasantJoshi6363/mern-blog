@@ -5,6 +5,6 @@ import { likePost } from "../controllers/like.controller.js";
 
 const likeRouter = express();
 
-likeRouter.post("/post/:id",isAuthenticated,likePost);
+likeRouter.post("/post/like/:id",isAuthenticated,likePost);
 
 export default likeRouter;
