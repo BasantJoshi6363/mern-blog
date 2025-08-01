@@ -23,7 +23,7 @@ const Blog = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-black text-white min-h-screen">
+    <div className="`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-black text-white min-h-screen`">
       <div className="flex justify-center flex-wrap gap-2 mb-6">
         {/* Add "All" category at the beginning */}
         {["All", ...categories].map((category, i) => (

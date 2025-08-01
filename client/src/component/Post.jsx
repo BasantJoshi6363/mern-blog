@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ProfileShape from './ProfileShape';
 import Button from './Button';
 import { CiHeart } from "react-icons/ci";
 import { VscComment } from "react-icons/vsc";
+import { PostContext } from '../context/PostContext';
 
 const Post = ({ val }) => {
+  const { createLike, like } = useContext(PostContext);
   const trimmedBody = val.body
     ? val.body.split(" ").slice(0, 30).join(" ") + (val.body.split(" ").length > 30 ? "..." : "")
     : "";
+
+  const handleLike = (postId) => {
+    createLike(postId);
+  }
 
   return (
     <div className="bg-gray-900 text-white rounded-lg shadow-md overflow-hidden flex mt-5">
@@ -38,8 +44,8 @@ const Post = ({ val }) => {
 
         {/* User Profile */}
         <div className="profile flex gap-3 items-center mt-2">
-          <Link to={`/user/${val.userid}`}><ProfileShape val={val.user.username} /></Link>
-          <p className='opacity-65 text-[10px]'>{val.user.username} ⭐</p>
+          <Link to={`/user/${val.userid}`}><ProfileShape val={val?.user?.username} /></Link>
+          <p className='opacity-65 text-[10px]'>{val?.user?.username} ⭐</p>
         </div>
 
         {/* Footer Buttons */}
@@ -50,10 +56,11 @@ const Post = ({ val }) => {
 
           <div className="flex gap-5 items-center">
             <ul className='flex gap-3 items-center mt-3'>
-              <Link className='flex gap-1 items-center'>
-                <CiHeart size={25} />
+              {like ? "❤️" : <Link className='flex gap-1 items-center'>
+                <CiHeart onClick={() => handleLike(val.id)} size={25} />
                 <p>{val.like?.length || 1}</p>
-              </Link>
+              </Link>}
+
               <Link to={`/${val.id}`} className='flex gap-1 items-center'>
                 <VscComment size={20} />
                 <p>{val.comment?.length || 0}</p>

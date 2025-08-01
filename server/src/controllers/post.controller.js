@@ -41,12 +41,20 @@ export const createPost = async (req, res) => {
 
 export const getPost = async (req, res) => {
     try {
-        const result = await Post.find().populate("user").populate({
-                path: "comment",
-                populate: {
-                    path: "user",
-                    select: "_id username email"
-                }
+        const result = await Post.find()
+        .populate("user")
+        .populate({
+            path: "like",
+            populate: {
+                path: "user",
+                select: "_id username email"
+            }
+        }).populate({
+            path: "comment",
+            populate: {
+                path: "user",
+                select: "_id username email"
+            }
 
         }).sort({ createdAt: -1 }).exec();
         return res.status(201).json({
@@ -65,14 +73,22 @@ export const getPost = async (req, res) => {
 export const getsinglePost = async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await Post.findById(id).populate("user").populate({
-            path: "comment",
-            populate: {
-                path: "user",
-                select: "_id username email"
-            }
-
-        }).exec();
+        const result = await Post.findById(id)
+            .populate("user")
+            .populate({
+                path: "like",
+                populate: {
+                    path: "user",
+                    select: "_id username email",
+                }
+            })
+            .populate({
+                path: "comment",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
+            }).exec();
         if (!result) {
             return res.status(404).json({
                 success: false,

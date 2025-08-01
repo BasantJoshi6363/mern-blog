@@ -11,8 +11,11 @@ export const PostContext = createContext();
 
 export const PostProvider = ({ children }) => {
     const { setLoading } = useContext(AuthContext);
+    const token = localStorage.getItem("token");
     const [post, setPost] = useState([])
-    const { singlePost, setSinglePost } = useState(null);
+    const [singlePost, setSinglePost] = useState({});
+    const [like, setLiked] = useState(null);
+    const baseurl = "http://localhost:5000/api";
     const createPost = useCallback(async (postInfo) => {
         setLoading(true);
         const formdata = new FormData();
@@ -23,9 +26,9 @@ export const PostProvider = ({ children }) => {
         // setLoading(true);
         // Logic to create a post
         try {
-            const response = await axios.post("http://localhost:5000/api/v1/create", formdata, {
+            const response = await axios.post(`${baseurl}/v1/create`, formdata, {
                 headers: {
-                    Authorization: localStorage.getItem("token")
+                    Authorization: token
                 }
             });
             console.log(response.data);
@@ -46,7 +49,7 @@ export const PostProvider = ({ children }) => {
     const getPosts = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await axios.get("http://localhost:5000/api/posts");
+            const response = await axios.get(`${baseurl}/posts`);
             setPost(response.data.result)
             if (response.data.success) {
                 return response.data.posts;
@@ -62,10 +65,9 @@ export const PostProvider = ({ children }) => {
     const getSinglePost = useCallback(async (id) => {
         setLoading(true);
         try {
-
-            const response = await axios.get(`http://localhost:5000/api/post/${id}`);
-            console.log(response.data.result);
-            setSinglePost(response.data.result);
+            const response = await axios.get(`${baseurl}/post/${id}`);
+            setSinglePost(response.data.result)
+            // setSinglePost(response.data.result);
             if (response.data.success) {
                 return response.data.post;
             } else {
@@ -73,6 +75,7 @@ export const PostProvider = ({ children }) => {
             }
         } catch (error) {
             toast.error("Failed to fetch post");
+            setLoading(false)
         }
         setLoading(false);
     }, []);
@@ -82,9 +85,9 @@ export const PostProvider = ({ children }) => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/comment/${postId}`, { content:comment }, {
+            const response = await axios.post(`${baseurl}/comment/${postId}`, { content: comment }, {
                 headers: {
-                    Authorization: localStorage.getItem("token")
+                    Authorization: token
                 }
             });
             if (response.data.success) {
@@ -99,11 +102,33 @@ export const PostProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
+    const createLike = useCallback(async (postId) => {
+        console.log(token)
+
+        try {
+            const response = await axios.post(`http://localhost:5000/api/post/like/${postId}`, null, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            console.log(response.data)
+            setLiked(response.data.success)
+
+        } catch (error) {
+            toast.error(error);
+            console.log(error)
+        }
+    }, []);
+    const disLike = useCallback(async (postId) => {
+        setLoading(true);
+
+    })
+
     useEffect(() => {
         getPosts();
     }, [])
     return (
-        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment }}>
+        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment, createLike, like }}>
             {children}
         </PostContext.Provider>
     )
