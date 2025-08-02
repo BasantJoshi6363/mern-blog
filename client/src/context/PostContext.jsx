@@ -103,8 +103,7 @@ export const PostProvider = ({ children }) => {
     }, []);
 
     const createLike = useCallback(async (postId) => {
-        console.log(token)
-
+        setLoading(true);
         try {
             const response = await axios.post(`http://localhost:5000/api/post/like/${postId}`, null, {
                 headers: {
@@ -112,8 +111,6 @@ export const PostProvider = ({ children }) => {
                 }
             });
             console.log(response.data)
-            setLiked(response.data.success)
-
         } catch (error) {
             toast.error(error);
             console.log(error)
@@ -123,6 +120,15 @@ export const PostProvider = ({ children }) => {
         setLoading(true);
 
     })
+
+    const getAllLike = useCallback(async () => {
+        try {
+            const response = await axios.get(`${baseurl}/likes/:id`);
+            console.log(response.data);
+        } catch (error) {
+
+        }
+    }, [])
 
     useEffect(() => {
         getPosts();
