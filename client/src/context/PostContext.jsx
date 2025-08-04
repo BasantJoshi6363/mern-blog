@@ -49,7 +49,11 @@ export const PostProvider = ({ children }) => {
     const getPosts = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${baseurl}/posts`);
+            const response = await axios.get(`${baseurl}/posts`, {
+                headers: {
+                    Authorization: localStorage.getItem("token")
+                }
+            });
             setPost(response.data.result)
             if (response.data.success) {
                 return response.data.posts;
