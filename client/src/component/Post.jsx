@@ -6,9 +6,10 @@ import Button from './Button';
 import { CiHeart } from "react-icons/ci";
 import { VscComment } from "react-icons/vsc";
 import { PostContext } from '../context/PostContext';
-
+import { FaHeart } from "react-icons/fa";
 const Post = ({ val }) => {
   const { createLike, like } = useContext(PostContext);
+  console.log(like);
   const trimmedBody = val.body
     ? val.body.split(" ").slice(0, 30).join(" ") + (val.body.split(" ").length > 30 ? "..." : "")
     : "";
@@ -56,7 +57,9 @@ const Post = ({ val }) => {
 
           <div className="flex gap-5 items-center">
             <ul className='flex gap-3 items-center mt-3'>
-              {like ? "❤️" : <Link className='flex gap-1 items-center'>
+
+              {like ? <FaHeart/> : <CiHeart/>}
+              {like ? <CiHeart onClick={()=>handleLike(val.id)} className='text-red-500 cursor-pointer' size={25} /> : <Link className='flex gap-1 items-center cursor-pointer'>
                 <CiHeart onClick={() => handleLike(val.id)} size={25} />
                 <p>{val.like?.length || 1}</p>
               </Link>}
