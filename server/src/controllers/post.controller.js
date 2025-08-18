@@ -2,6 +2,7 @@ import Post from "../models/post.model.js"
 import fs from "fs"
 import cloudinary from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
+import { User } from "../models/users.model.js"
 export const createPost = async (req, res) => {
     try {
         const { title, body, category } = req.body
@@ -44,6 +45,7 @@ export const getPost = async (req, res) => {
         const user = await jwt.verify(token, "thisissecret");
 
         if (token) {
+
             const result = await Post.find()
                 .populate("user")
                 .populate({
@@ -131,6 +133,60 @@ export const getsinglePost = async (req, res) => {
             result
         })
     } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const verifyIsAuthor = async (req, res) => {
+    try {
+        let token = req.headers.authorization;
+        let author;
+        const user = await jwt.verify(token, "thisissecret");
+        console.log(user);
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const getUserPost = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        // console.log(await Post.find({ user:userId }))
+
+        const user = await Post.find({ user: userId })
+            .populate("user")
+            .populate({
+                path: "like",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
+            })
+            .populate({
+                path: "comment",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
+
+            })
+            .sort({ createdAt: -1 }).exec();
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "user post fetched successfully",
+            result: user
+        })
+    }
+    catch (error) {
         return res.status(500).json({
             success: false,
             message: error.message
