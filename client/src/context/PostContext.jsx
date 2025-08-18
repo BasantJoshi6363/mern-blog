@@ -14,6 +14,7 @@ export const PostProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const [post, setPost] = useState([])
     const [singlePost, setSinglePost] = useState({});
+    const [userPost, setUserPost] = useState([]);
     const [like, setLiked] = useState(null);
     const baseurl = "http://localhost:5000/api";
     const createPost = useCallback(async (postInfo) => {
@@ -134,11 +135,25 @@ export const PostProvider = ({ children }) => {
         }
     }, [])
 
+
+    const getUserPost = useCallback(async (userid) => {
+        try {
+            const response = await axios.get(`${baseurl}/user/${userid}`,{
+                headers : {
+                    Authorization : localStorage.getItem("token")
+                }
+            });
+            setUserPost(response.data.result);
+        } catch (error) {
+            console.log(error)
+            toast.error("problem getting user post");
+        }
+    }, [])
     useEffect(() => {
         getPosts();
     }, [])
     return (
-        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment, createLike, like }}>
+        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment, getUserPost, userPost }}>
             {children}
         </PostContext.Provider>
     )
