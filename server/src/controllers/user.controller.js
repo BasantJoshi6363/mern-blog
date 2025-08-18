@@ -50,7 +50,6 @@ export const createUser = async (req, res) => {
 // Login User
 export const loginUser = async (req, res) => {
     try {
-        console.log(req.body)
         const { email, password } = req.body;
         if (!(email && password)) {
             return res.status(400).json({
@@ -59,7 +58,7 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email : email});
         console.log(user)
         if (!user) {
             return res.status(404).json({
