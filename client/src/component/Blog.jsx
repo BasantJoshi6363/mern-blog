@@ -61,7 +61,8 @@ const Blog = () => {
                 },
                 userid: val.user._id,
                 comment: val.comment,
-                like: val.like
+                like: val.like,
+
               }}
             />
           ))}
