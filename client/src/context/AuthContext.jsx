@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         validateToken();
+        checkIsAuthor();
     }, [validateToken]);
 
     const login = useCallback(async (data) => {
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data.user);
             window.location.reload();
             navigate("/p")
-            
+
         } catch (error) {
             toast.error(error.response.data.message || "Login failed");
             setLoading(false)
@@ -91,6 +92,20 @@ export const AuthProvider = ({ children }) => {
             toast.error("logout failed");
         }
         setLoading(false);
+    }, [])
+
+    const checkIsAuthor = useCallback(async () => {
+        try {
+           const response =  await axios.get("http://localhost:5000/api/v1/user/me", {
+                headers: {
+                    Authorization: localStorage.getItem("token")
+                }
+            });
+            console.log(response.data);
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error.message);
+        }
     }, [])
 
 

@@ -59,7 +59,6 @@ export const loginUser = async (req, res) => {
         }
 
         const user = await User.findOne({email : email});
-        console.log(user)
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -207,3 +206,13 @@ export const userInfoWithPost = async (req, res) => {
     }
 }
 
+const checkUserIsAuthor = ()=>{
+    try {
+        
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            message : "problem here probably not the author and admin."
+        })
+    }
+}

@@ -8,16 +8,10 @@ import { VscComment } from "react-icons/vsc";
 import { PostContext } from '../context/PostContext';
 import { FaHeart } from "react-icons/fa";
 const Post = ({ val }) => {
-  const { createLike, like } = useContext(PostContext);
-  console.log(like);
+  
   const trimmedBody = val.body
     ? val.body.split(" ").slice(0, 30).join(" ") + (val.body.split(" ").length > 30 ? "..." : "")
     : "";
-
-  const handleLike = (postId) => {
-    createLike(postId);
-  }
-
   return (
     <div className="bg-gray-900 text-white rounded-lg shadow-md overflow-hidden flex mt-5">
       {/* Image */}
@@ -58,13 +52,7 @@ const Post = ({ val }) => {
           <div className="flex gap-5 items-center">
             <ul className='flex gap-3 items-center mt-3'>
 
-              {like ? <FaHeart/> : <CiHeart/>}
-              {like ? <CiHeart onClick={()=>handleLike(val.id)} className='text-red-500 cursor-pointer' size={25} /> : <Link className='flex gap-1 items-center cursor-pointer'>
-                <CiHeart onClick={() => handleLike(val.id)} size={25} />
-                <p>{val.like?.length || 1}</p>
-              </Link>}
-
-              <Link to={`/${val.id}`} className='flex gap-1 items-center'>
+              <Link to={`/${val.id}`} id='#comment' className='flex gap-1 items-center'>
                 <VscComment size={20} />
                 <p>{val.comment?.length || 0}</p>
               </Link>

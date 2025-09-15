@@ -17,11 +17,38 @@ const SinglePost = () => {
     const [comment, setComment] = useState("");
     const { createComment, getSinglePost, singlePost } = useContext(PostContext);
     const { isAuthenticated, loading } = useContext(AuthContext);
+    const [click, setClick] = useState(false);
+
+    function clickHandler() {
+        setClick(prev => !prev);
+    }
+
+    function mouseLeaveEvent() {
+        setClick(false);
+    }
     useEffect(() => {
 
         getSinglePost(id);
+        checkIsAuthor();
 
-    }, [1])
+
+    }, [])
+
+    async function checkIsAuthor() {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/poste/${id}`, {
+                headers: {
+                    Authorization: localStorage.getItem("token")
+                }
+            }
+            );
+            console.log("function is calling bro");
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    checkIsAuthor();
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -71,8 +98,13 @@ const SinglePost = () => {
                         </Link>
                     </div>
                 </div>
-                <div className="float-right text-2xl">
-                    <PiDotsThreeVerticalBold className='cursor-pointer hover:opacity-85' />
+                <div onClick={clickHandler} className="relative float-right text-2xl">
+                    <PiDotsThreeVerticalBold  className='cursor-pointer hover:opacity-85' />
+                    {click && (<div onMouseLeave={mouseLeaveEvent}  className='absolute right-0 w-50 h-fit bg-zinc-700 flex flex-col text-sm p-2'>
+                        <Link className='hover:bg-zinc-600' to={`/edit/${id}`}>edit</Link>
+                        <Link className='hover:bg-zinc-600'to={`/delete/${id}`}>delete</Link>
+                    </div>)}
+
                 </div>
                 <div className="lower">
                     <h1 className='mt-10 text-4xl'>{singlePost?.title}</h1>
@@ -88,21 +120,21 @@ const SinglePost = () => {
                         <Button val={"Send Comment"} />
                     </form>
 
-
+                    <div className="mt-5"></div>
                     {singlePost?.comment?.length === 0 ? (<>
                         <h3>No comment Available....</h3>
                     </>) : (<>
-                        {singlePost?.comment?.map((com) => {
-                            return <div key={com} className='mt-10'>
+                        {singlePost?.comment?.map((com, i) => {
+                            return <div key={i} id='comment' className='flex flex-col'>
                                 <div className="flex gap-3 items-center">
                                     <div className="">
                                         <Link to={`/user/${com?.user._id}`}>
                                             <ProfileShape val={com?.user.username} />
                                         </Link>
                                     </div>
-                                    <div className="w-[369px] bg-zinc-700 p-2 rounded-md">
+                                    <div className="w-[300px] bg-zinc-700 p-2 rounded-md">
                                         <p className='text-[11px] opacity-70'>{com?.user.username}</p>
-                                        <p className='text-[15px]'>{com?.content}</p>
+                                        <p className='text-[13px]'>{com?.content}</p>
                                     </div>
                                 </div>
                                 <p className='text-[11px] opacity-70 ml-12 mt-2'>{moment(com?.createdAt).from()}</p>

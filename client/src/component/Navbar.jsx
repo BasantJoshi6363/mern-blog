@@ -15,6 +15,10 @@ const Navbar = () => {
     const clickHandler = () => {
         setOpenProfile(prev => !prev);
     }
+
+    function mouseLeaveEvent(){
+        setOpenProfile(false);
+    }
     const { user, isAuthenticated } = useContext(AuthContext);
     return (
         <nav className="bg-black text-white p-6 relative z-50">
@@ -37,7 +41,7 @@ const Navbar = () => {
                     <div className="hidden md:block relative">
                         {isAuthenticated ? (<div>
                             <div onClick={clickHandler} className="profile size-10 rounded-full bg-green-600 cursor-pointer flex items-center justify-center text-white hover:opacity-80">{user.username[0].toUpperCase()}</div>
-                            {openProfile && (<div className=' absolute mt-2 left-[-150px] h-38 w-50 bg-zinc-600 text-white'>
+                            {openProfile && (<div onMouseLeave={mouseLeaveEvent} className=' absolute mt-2 left-[-150px] h-38 w-50 bg-zinc-600 text-white'>
                                 <button onClick={clickHandler} className='float-right p-2 cursor-pointer text-white'><RxCross2 size={18} /></button>
                                 <ul>
                                     <Link to={"/create"} className='flex  gap-3 p-2 hover:bg-zinc-400 w-full'>

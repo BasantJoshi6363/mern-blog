@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import UserPage from './component/UserPage';
 
+
 const Loader = lazy(() => import('./component/Loader'));
 const ProtectedRoute = lazy(() => import('./component/ProtectedRoute'));
 const CreatePost = lazy(() => import('./component/CreatePost'));
@@ -17,11 +18,12 @@ const Register = lazy(() => import('./component/Register'));
 const PublicRoute = lazy(() => import('./component/PublicRoute'));
 const Navbar = lazy(() => import('./component/Navbar'));
 const SinglePage = lazy(() => import('./component/SinglePage'));
+const EditPage = lazy(()=>import('./component/EditPage'));
 
 
 const App = () => {
   const navigate = useNavigate();
-  
+
 
   // if(loading) return <Loader />;
   return (
@@ -40,6 +42,7 @@ const App = () => {
           <Route path='/logout' element={<ProtectedRoute><Logout /></ProtectedRoute>}></Route>
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
+          <Route path='/edit/:id' element={<EditPage />} />
           <Route path='*' element={<h1>404 Not Found</h1>}></Route>
         </Routes>
       </Suspense>
