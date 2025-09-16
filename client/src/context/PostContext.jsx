@@ -47,6 +47,35 @@ export const PostProvider = ({ children }) => {
 
     }, []);
 
+    const updatePost = useCallback(async (postInfo,id) => {
+            const formdata = new FormData();
+            formdata.append("title", postInfo.title);
+            formdata.append("body", postInfo.body);
+            formdata.append("category", postInfo.category);
+            formdata.append("file", postInfo.file);
+            try {
+                const response = await axios.put(`${baseurl}/v1/post/edit/${id}`, formdata, {
+                headers: {
+                    Authorization: token
+                }
+            });
+            console.log(response.data);
+            <Navigate to="/blogs" replace />;
+            if (response.data.success) {
+                toast.success("Post created successfully");
+            } else {
+                toast.error("Failed to create post");
+            }
+            } catch (error) {
+                 toast.error("Failed to create post");
+            setLoading(false);
+            }
+
+        },
+        []
+    )
+
+
     const getPosts = useCallback(async () => {
         setLoading(true);
         try {
@@ -138,9 +167,9 @@ export const PostProvider = ({ children }) => {
 
     const getUserPost = useCallback(async (userid) => {
         try {
-            const response = await axios.get(`${baseurl}/user/${userid}`,{
-                headers : {
-                    Authorization : localStorage.getItem("token")
+            const response = await axios.get(`${baseurl}/user/${userid}`, {
+                headers: {
+                    Authorization: localStorage.getItem("token")
                 }
             });
             setUserPost(response.data.result);
@@ -153,7 +182,7 @@ export const PostProvider = ({ children }) => {
         getPosts();
     }, [])
     return (
-        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment, getUserPost, userPost }}>
+        <PostContext.Provider value={{ createPost, getPosts, post, getSinglePost, singlePost, createComment, getUserPost, userPost,updatePost }}>
             {children}
         </PostContext.Provider>
     )
