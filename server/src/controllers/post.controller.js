@@ -193,3 +193,76 @@ export const getUserPost = async (req, res) => {
         })
     }
 }
+
+export const updatePost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, body, category } = req.body;
+        let updatedFields = { title, body, category };
+        if (req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            if (!result) {
+                return res.status(500).json({
+                    success: false,
+                    message: "problem on uploading file on cloudinary"
+                })
+            }
+            const image = result?.secure_url;
+            fs.unlinkSync(req.file.path);
+            updatedFields.imageUrl = image;
+        }
+        const post = await Post.findById(id);
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        if (post.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to update this post"
+            });
+        }
+        const updatedPost = await Post.findByIdAndUpdate(id, updatedFields, { new: true });
+        return res.status(200).json({
+            success: true,
+            message: "Post updated successfully",
+            updatedPost
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+
+export const deletePost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await Post.findById(id);
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        if (post.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to delete this post"
+            });
+        }
+        await Post.findByIdAndDelete(id);
+        return res.status(200).json({
+            success: true,
+            message: "Post deleted successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
