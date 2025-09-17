@@ -266,3 +266,35 @@ export const deletePost = async (req, res) => {
         });
     }
 }
+
+export const getAllPostAfterLogin = async (req, res) => {
+    try {
+        const result = await Post.find()
+            .populate("user")
+            .populate({
+                path: "like",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
+            }).populate({
+                path: "comment",
+                populate: {
+                    path: "user",
+                    select: "_id username email"
+                }
+
+            }).sort({ createdAt: -1 }).exec();
+        return res.status(200).json({
+            success: true,
+            message: "Post fetched successfully",
+            result,
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
