@@ -50,7 +50,7 @@ const EditPage = () => {
     // CHANGE: Pass id to createPost for updating
     const submitHandler = (e) => {
         e.preventDefault();
-        createPost({
+        updatePost(id,{
             id: id,
             title: formdata.title,
             body: formdata.body,
