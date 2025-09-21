@@ -2,6 +2,8 @@ import React, { lazy, Suspense, useContext, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import UserPage from './component/UserPage';
+import AllPosts from './component/AllPosts';
+import DeletePage from './component/DeletePage';
 
 
 const Loader = lazy(() => import('./component/Loader'));
@@ -32,6 +34,7 @@ const App = () => {
       <Suspense className="p-6" fallback={<Loader />}>
         <Routes>
           <Route path='/blog' index element={<Blog />} />
+          <Route path='/posts' index element={<AllPosts />} />
           <Route path='/' element={<Home />}></Route>
           <Route path='/:id' element={<SinglePage />}></Route>
           <Route path='/user/:id' element={<UserPage />}></Route>
@@ -43,6 +46,7 @@ const App = () => {
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/edit/:id' element={<EditPage />} />
+          <Route path='/delete/:id' element={<DeletePage />} />
           <Route path='*' element={<h1>404 Not Found</h1>}></Route>
         </Routes>
       </Suspense>
