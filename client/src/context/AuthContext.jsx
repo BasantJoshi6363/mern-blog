@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState("");
+    const [isAuthor, setIsAuthor] = useState(false);
     const validateToken = useCallback(async () => {
         const token = localStorage.getItem("token");
         try {
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             toast.success(res.data.message);
             setUser(res.data.user);
             window.location.reload();
-            navigate("/p")
+            navigate("/posts")
 
         } catch (error) {
             toast.error(error.response.data.message || "Login failed");
@@ -96,12 +97,13 @@ export const AuthProvider = ({ children }) => {
 
     const checkIsAuthor = useCallback(async () => {
         try {
-           const response =  await axios.get("http://localhost:5000/api/v1/user/me", {
+            const response = await axios.get("http://localhost:5000/api/validate-token", {
                 headers: {
                     Authorization: localStorage.getItem("token")
                 }
             });
-            console.log(response.data);
+            setIsAuthor(response.data.success);
+
         } catch (error) {
             toast.error(error.message);
             console.log(error.message);
@@ -117,7 +119,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         user,
         isAuthenticated,
-        setLoading
+        setLoading,
+        isAuthor
     }} >
         {children}
     </AuthContext.Provider>
