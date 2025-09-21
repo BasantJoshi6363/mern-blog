@@ -31,5 +31,28 @@ export const isAuthenticated = async (req, res, next) => {
 };
 
 
+export const checkAuthor = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const data = await jwt.decode(token, "thisissecret");
+    const user = await User.findOne(data._id);
+
+    if (user.role === "author") {
+      res.status(202).json({
+        success: true
+      })
+      next();
+    }
+  next();
+
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token.",
+    });
+  }
+}
+
+
 
 
