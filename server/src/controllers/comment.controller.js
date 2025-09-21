@@ -4,9 +4,9 @@ import Post from "../models/post.model.js";
 
 export const createComment = async (req, res) => {
     try {
-        console.log(req.params)
+        // console.log(req.params)
         const { content } = req.body;
-        console.log(content)
+        // console.log(content)
 
         if (!content) {
             return res.status(400).json({
