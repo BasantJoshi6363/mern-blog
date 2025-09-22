@@ -22,7 +22,7 @@ export const createUser = async (req, res) => {
                 message: "User with this email already exists.",
             });
         }
-        console.log(existingUser);
+
 
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -58,7 +58,7 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({email : email});
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -206,13 +206,52 @@ export const userInfoWithPost = async (req, res) => {
     }
 }
 
-const checkUserIsAuthor = ()=>{
+const checkUserIsAuthor = () => {
     try {
-        
+
     } catch (error) {
         return res.status(500).json({
-            success : false,
-            message : "problem here probably not the author and admin."
+            success: false,
+            message: "problem here probably not the author and admin."
+        })
+    }
+}
+
+
+export const addSocialLinks = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { facebook, instagram, twitter, linkedin, whatsapp } = req.body;
+        // const result = await User.findOneAndUpdate(id, {
+        //     facebook: facebook || "",
+        //     instagram: instagram || "",
+        //     twitter: twitter || "",
+        //     linkedin: linkedin || "",
+        //     whatsapp: whatsapp || ""
+        // });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const getUserInfo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await User.findById(id);
+
+        return res.status(200).json({
+            success: true,
+            message: "User Data Fetched Successfully.",
+            result
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
         })
     }
 }
