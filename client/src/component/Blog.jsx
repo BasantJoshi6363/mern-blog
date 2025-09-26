@@ -9,8 +9,9 @@ const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
+    // window.location.reload();
     setFilterPost(post);
-  }, [post]);
+  }, [1]);
 
   const filterPosts = (category) => {
     setSelectedCategory(category);
