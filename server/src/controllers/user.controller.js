@@ -241,6 +241,7 @@ export const addSocialLinks = async (req, res) => {
 export const getUserInfo = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log(id  )
         const result = await User.findById(id);
 
         return res.status(200).json({
