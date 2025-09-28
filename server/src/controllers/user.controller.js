@@ -73,7 +73,7 @@ export const loginUser = async (req, res) => {
                 message: "Invalid credentials.",
             });
         }
-        const token = jwt.sign({ id: user._id }, "thisissecret", { expiresIn: '3d' });
+        const token = jwt.sign({ id: user._id }, "thisissecret", { expiresIn: '365d' });
 
 
         return res.status(200).json({
@@ -98,8 +98,9 @@ export const loginUser = async (req, res) => {
 
 export const validateToken = async (req, res) => {
     try {
-
-        const token = req.headers.authorization
+        console.log(req.headers);
+        const token = req.headers?.authorization;
+        
 
         if (!token) {
             return res.status(401).json({
@@ -110,6 +111,7 @@ export const validateToken = async (req, res) => {
 
         const decoded = await jwt.verify(token, "thisissecret");
         const user = await User.findById(decoded.id).select("-password");
+        console.log(user)
 
         if (!user) {
             return res.status(404).json({
@@ -122,7 +124,12 @@ export const validateToken = async (req, res) => {
             success: true,
             username: user.username,
             email: user.email,
-            userId: user._id
+            userId: user._id,
+            facebook: user.facebook,
+            instagram: user.instagram,
+            twitter: user.twitter,
+            linkedin: user.linkedin,
+            whatsapp: user.whatsapp
         });
     } catch (error) {
         console.log(error);
@@ -220,15 +227,19 @@ const checkUserIsAuthor = () => {
 
 export const addSocialLinks = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { facebook, instagram, twitter, linkedin, whatsapp } = req.body;
-        // const result = await User.findOneAndUpdate(id, {
-        //     facebook: facebook || "",
-        //     instagram: instagram || "",
-        //     twitter: twitter || "",
-        //     linkedin: linkedin || "",
-        //     whatsapp: whatsapp || ""
-        // });
+        const { id } = req.user;
+        // const { facebook, instagram, twitter, linkedin, whatsapp } = req.body;
+
+        const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+        console.log(user)
+
+        return res.status(201).json({
+            success: true,
+            message: "social media added successfully.",
+            user
+        })
+
+
 
     } catch (error) {
         return res.status(500).json({
@@ -241,7 +252,7 @@ export const addSocialLinks = async (req, res) => {
 export const getUserInfo = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(id  )
+        console.log(id)
         const result = await User.findById(id);
 
         return res.status(200).json({
