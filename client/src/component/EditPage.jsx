@@ -47,7 +47,7 @@ const EditPage = () => {
         }));
     };
 
-    // CHANGE: Pass id to createPost for updating
+        
     const submitHandler = (e) => {
         e.preventDefault();
         updatePost(id,{
@@ -70,7 +70,7 @@ const EditPage = () => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-gray-900 text-white rounded-lg shadow-lg">
             <h1 className="text-3xl font-bold mb-6 text-center">Edit Post</h1>
             <form onSubmit={submitHandler} className="space-y-6">
-                {/* CHANGE: Use input for title, bind to formdata */}
+               
                 <input
                     required
                     value={formdata.title}
