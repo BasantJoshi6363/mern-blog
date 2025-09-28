@@ -13,7 +13,7 @@ const categories = [
 ];
 
 const CreatePost = () => {
-  const { createPost } = useContext(PostContext);
+  const { createPost, isSubmitting } = useContext(PostContext);
   const [formdata, setFormdata] = useState({
     title: "",
     body: "",
@@ -107,7 +107,7 @@ const CreatePost = () => {
           type="submit"
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-lg transition duration-300"
         >
-          Create Post
+          {isSubmitting ? "Creating Post..." : "Create Post"}
         </button>
       </form>
     </div>
