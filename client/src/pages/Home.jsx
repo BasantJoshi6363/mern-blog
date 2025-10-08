@@ -28,7 +28,7 @@ const Home = () => {
               </div>
               <div className="circles flex gap-5 mt-5 ">
                 {items.map((val, i) => {
-                  return <Link key={i} to={val.category} className=' h-[300px] w-[200px] flex flex-col gap-5'>
+                  return <Link key={i} to={`blog`} className=' h-[300px] w-[200px] flex flex-col gap-5'>
                     <div className="capsule size-[90%] flex items-center justify-center object-cover ">
                       <img src={val.imageUrl} className='size-full object-cover rounded-full' alt="" />
                     </div>
